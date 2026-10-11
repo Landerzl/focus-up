@@ -166,6 +166,10 @@ Install: `powershell -ExecutionPolicy Bypass -File companion\install.ps1` (per-u
 
 Also listed in Settings → bottom of the page: turn off Brave News, Rewards ad notifications, Wallet/Talk buttons and the sidebar.
 
+## License
+
+Free to use: this project is released under the **[MIT License](LICENSE)**. You can use it, copy it, change it and share it, for personal or commercial purposes, as long as the copyright and license notice stay with it. It comes with no warranty.
+
 ## Manual test checklist (NOT yet run: needs Brave)
 
 Nothing below has been executed in a real browser. The URL-rule and timer logic is covered by a Node test; everything else is untested.
