@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Focus Up</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dash">
+  <header>
+    <h1>Focus Up</h1>
+    <nav>
+      <button data-tab="calendar" class="on">Calendar</button>
+      <button data-tab="projects">Projects</button>
+      <button data-tab="settings">Settings</button>
+      <button data-tab="account">Account</button>
+    </nav>
+    <button id="openAppDash" type="button">Open desktop app</button>
+  </header>
+
+  <section id="tab-calendar">
+    <div class="filterbar"><label for="projectFilter" class="muted small">Showing</label><select id="projectFilter"></select></div>
+    <div class="stats" id="stats"></div>
+
+    <div class="cal-head">
+      <button id="prev" aria-label="Previous month">‹</button>
+      <h2 id="monthLabel"></h2>
+      <button id="next" aria-label="Next month">›</button>
+      <button id="today">Today</button>
+    </div>
+    <div class="cal" id="cal"></div>
+    <div class="legend">Less <i style="background:var(--card)"></i><i class="l1" style="background:color-mix(in srgb, var(--accent) 18%, var(--card))"></i><i style="background:color-mix(in srgb, var(--accent) 38%, var(--card))"></i><i style="background:color-mix(in srgb, var(--accent) 60%, var(--card))"></i><i style="background:color-mix(in srgb, var(--accent) 82%, var(--card))"></i> More</div>
+
+    <div class="panel" id="dayPanel"></div>
+
+    <div class="toolbar">
+      <button id="exportJson">Export JSON</button>
+      <button id="exportCsv">Export CSV</button>
+      <label class="btn">Import JSON<input type="file" id="importFile" accept=".json,application/json" hidden></label>
+      <span id="ioMsg" class="muted small"></span>
+    </div>
+  </section>
+
+  <section id="tab-projects" hidden>
+    <div class="panel">
+      <h3>Projects</h3>
+      <p class="muted small">Time spent on a subproject also counts toward every project above it. <strong>Total</strong> includes subprojects; <strong>own</strong> is only sessions assigned directly to that project.</p>
+      <div class="row-form">
+        <input id="newProjectName" type="text" maxlength="80" placeholder="New top-level project">
+        <button id="addProject" class="primary" type="button">Add project</button>
+      </div>
+      <div id="projectMsg" class="error"></div>
+      <div id="projectTree"></div>
+    </div>
+  </section>
+
+  <section id="tab-account" hidden>
+    <div class="panel">
+      <h3>Cloud sync</h3>
+      <p class="muted small">Sign in with the same email on every computer and your finished sessions and projects are shared between them, so time from your work laptop counts here too. Your data is stored in <strong>your own</strong> free Supabase project. Settings and blocklists are not synced; each computer keeps its own.</p>
+    </div>
+
+    <div class="panel" id="acctSetup">
+      <h3>1. Connect your Supabase project</h3>
+      <p class="muted small">Create a free project at supabase.com, run <code>sync/supabase-setup.sql</code> in its SQL Editor, then copy two values from <em>Project Settings &rarr; API</em>. Step by step in the README.</p>
+      <div class="field"><label for="sbUrl">Project URL</label><input id="sbUrl" type="url" placeholder="https://abcdefgh.supabase.co" autocomplete="off"></div>
+      <div class="field"><label for="sbKey">anon public (or publishable) key. Never the secret / service_role key</label><input id="sbKey" type="text" autocomplete="off" spellcheck="false"></div>
+      <div class="row-form"><button id="sbSave" class="primary" type="button">Save</button></div>
+      <div id="sbMsg" class="error"></div>
+    </div>
+
+    <div class="panel" id="acctLogin" hidden>
+      <h3>2. Sign in</h3>
+      <div class="field"><label for="acctEmailInput">Email</label><input id="acctEmailInput" type="email" autocomplete="username"></div>
+      <div class="field"><label for="acctPassword">Password</label><input id="acctPassword" type="password" autocomplete="current-password"></div>
+      <div class="row-form">
+        <button id="acctSignIn" class="primary" type="button">Sign in</button>
+        <button id="acctCreate" type="button">Create account</button>
+      </div>
+      <div id="loginMsg" class="error"></div>
+    </div>
+
+    <div class="panel" id="acctIn" hidden>
+      <h3>Signed in as <span id="acctEmail"></span></h3>
+      <p id="syncStatus" class="muted"></p>
+      <div class="field"><label for="deviceName">This computer is called</label>
+        <div class="row-form"><input id="deviceName" type="text" maxlength="40" placeholder="Work laptop"><button id="deviceSave" type="button">Save</button></div></div>
+      <div class="row-form">
+        <button id="syncNowBtn" class="primary" type="button">Sync now</button>
+        <button id="acctSignOut" type="button">Sign out</button>
+      </div>
+      <div id="syncMsg" class="muted small"></div>
+    </div>
+  </section>
+
+  <section id="tab-settings" hidden>
+    <div id="lockNote" class="panel" hidden>A session is running, so settings are locked until it ends.</div>
+    <form id="settingsForm">
+      <div class="grid2">
+        <div class="panel"><h3>Music allowlist</h3><p class="muted small">One domain per line. Subdomains are included.</p><textarea id="musicAllow"></textarea></div>
+        <div class="panel"><h3>Distraction blocklist</h3><p class="muted small">Blocked in the Research tab.</p><textarea id="blocklist"></textarea></div>
+        <div class="panel"><h3>Blocklist exceptions</h3><p class="muted small">Allowed even if a parent domain is blocked.</p><textarea id="blockExceptions"></textarea></div>
+        <div class="panel"><h3>Work tab extra domains</h3><p class="muted small">Allowed besides the page the tab is locked to.</p><textarea id="workAllow"></textarea></div>
+        <div class="panel"><h3>Blocked desktop apps</h3><p class="muted small">Process names (e.g. <code>Steam.exe</code>) the Windows companion closes politely during a session, rechecked every minute. Discord, browsers and system processes are never touched.</p><textarea id="blockedApps"></textarea></div>
+        <div class="panel">
+          <h3>Options</h3>
+          <label class="check"><input type="checkbox" id="brEnabled"> Remind me to rest</label>
+          <p class="muted small">After this much focus the session pauses itself and a rest window opens. Rest time isn't counted as focus.</p>
+          <div class="row">
+            <div class="field"><label for="brWork">Rest after (min of focus)</label><input type="number" id="brWork" min="1" max="240"></div>
+            <div class="field"><label for="brRest">Rest for (min)</label><input type="number" id="brRest" min="1" max="60"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label for="brLongRest">Long rest (min)</label><input type="number" id="brLongRest" min="1" max="120"></div>
+            <div class="field"><label for="brLongEvery">Long rest every N rests (0 = never)</label><input type="number" id="brLongEvery" min="0" max="12"></div>
+          </div>
+          <div class="presets small">Presets:
+            <button type="button" data-work="25" data-rest="5" data-long="15">25 / 5</button>
+            <button type="button" data-work="50" data-rest="10" data-long="20">50 / 10</button>
+            <button type="button" data-work="90" data-rest="20" data-long="30">90 / 20</button>
+          </div>
+        </div>
+      </div>
+      <div class="toolbar">
+        <button type="submit" class="primary">Save settings</button>
+        <button type="button" id="resetSettings">Reset to defaults</button>
+        <span id="saveMsg" class="muted small"></span>
+      </div>
+    </form>
+
+    <div class="panel" style="margin-top:18px">
+      <h3>Recommended Brave settings</h3>
+      <p class="muted small">An extension can't change these. Do them once:</p>
+      <ul class="tidy">
+        <li>Settings → New Tab Page: turn off <strong>Show Brave News</strong> and the sponsored images.</li>
+        <li>Settings → Brave Rewards: turn off ad notifications (or Rewards altogether).</li>
+        <li>Settings → Privacy and security → Site and Shield Settings → Notifications: set to <strong>Don't allow sites to send notifications</strong>.</li>
+        <li>Settings → Appearance: hide the sidebar, Brave Wallet, and Brave Talk buttons.</li>
+        <li>brave://extensions → Focus Up → Details: turn on <strong>Allow access to file URLs</strong> if you use a local PDF in the Work tab.</li>
+      </ul>
+    </div>
+  </section>
+
+  <dialog id="pickDialog">
+    <p id="pickTitle"></p>
+    <select id="pickSelect"></select>
+    <div class="row-form">
+      <button id="pickOk" class="primary" type="button">Move</button>
+      <button id="pickCancel" type="button">Cancel</button>
+    </div>
+  </dialog>
+
+  <script src="shared.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

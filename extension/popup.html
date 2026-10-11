@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Focus Up</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="popup">
+  <!-- no session -->
+  <main id="idle" hidden>
+    <h1>Start a focus session</h1>
+
+        <p class="muted small">Your chosen tabs move to a new window. Your other tabs stay where they are.</p>
+
+    <div class="field"><label for="name">Session name (optional)</label><input id="name" type="text" maxlength="120" placeholder="Thesis ch. 3"></div>
+    <div class="field"><label for="planned">Planned minutes (optional)</label><input id="planned" type="number" min="0" max="720" placeholder="e.g. 90"></div>
+
+    <div class="field">
+      <label for="sel-project">Project</label>
+      <div class="row">
+        <select id="sel-project"></select>
+        <button id="newProject" type="button" title="New top-level project">+ New</button>
+        <button id="newSub" type="button" title="New subproject of the selected project">+ Sub</button>
+      </div>
+      <div id="projectForm" class="row" hidden>
+        <input id="projectName" type="text" maxlength="80" placeholder="Project name">
+        <button id="projectCreate" type="button" class="primary">Create</button>
+      </div>
+    </div>
+
+    <div class="field"><label for="sel-research">Research tab (Google / AI)</label><select id="sel-research"></select></div>
+    <div class="field"><label for="sel-work">Work tab (book / article / PDF)</label><select id="sel-work"></select></div>
+    <div class="field"><label for="sel-music">Music tab</label><select id="sel-music"></select></div>
+
+    <button id="start" class="primary">Start session</button>
+    <div id="idleError" class="error" hidden></div>
+    <div class="row">
+      <button id="openApp" type="button">Open desktop app</button>
+      <button id="openDash" type="button">Calendar &amp; settings</button>
+    </div>
+  </main>
+
+  <!-- session running -->
+  <main id="active" hidden>
+    <div class="center"><strong id="sName"></strong></div>
+    <div id="sProject" class="center muted small"></div>
+    <div id="timer" class="timer">00:00:00</div>
+    <div id="phase" class="center muted"></div>
+    <div id="goal" class="center muted small"></div>
+    <div id="attempts" class="center muted small"></div>
+    <div id="companion" class="center muted small"></div>
+
+    <div class="row">
+      <button id="pause">Pause</button>
+      <button id="skipRest" class="primary" hidden>Skip rest</button>
+      <button id="end" class="danger">End session</button>
+    </div>
+
+    <div id="endBox" class="card" hidden>
+      <div id="endMsg"></div>
+      <input id="endPhrase" type="text" autocomplete="off" hidden>
+      <div class="row" style="margin-top:8px">
+        <button id="endConfirm" class="danger">End session</button>
+        <button id="endCancel">Keep going</button>
+      </div>
+      <button id="endDiscard" class="danger" type="button" style="margin-top:8px;width:100%">Discard</button>
+      <div class="muted small" style="margin-top:4px">Started by mistake? Discard stops it and saves nothing.</div>
+    </div>
+
+    <div id="slots" class="card"></div>
+    <div class="row">
+      <button id="openAppActive" type="button">Open desktop app</button>
+      <button id="openDashActive" type="button">Calendar</button>
+    </div>
+    <div id="activeError" class="error" hidden></div>
+  </main>
+
+  <div id="syncLine" class="center muted small" style="margin-top:8px" hidden></div>
+
+  <script src="shared.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

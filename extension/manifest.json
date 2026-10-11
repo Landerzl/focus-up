@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Focus Up",
+  "version": "0.1.0",
+  "description": "Focus sessions: 3 tabs only, no notifications, a session timer and a calendar.",
+  "permissions": [
+    "tabs",
+    "storage",
+    "webNavigation",
+    "contentSettings",
+    "scripting",
+    "alarms",
+    "nativeMessaging"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Focus Up"
+  },
+  "options_ui": {
+    "page": "dashboard.html",
+    "open_in_tab": true
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsk6pk9k5c02mfd3JOemSAxwlZhUKTHQxzdSRrkXaaSifZev5+Mbezmdjpfbn269wg3UfcgMi0OFNoq3WP0r0F8jV59KNxSxR3JvTk4UqGQJOCqm1z6nWVq49UGrlo1zLlbMnkkTmEnYNt7AO7XWvgQ1PHk9kN15D3zAG+Kb+7qv0//f6b2aMchgvdZZ4bL7YoCRxZ0bKFQcM3/xS4cVy9WOkXyzh7Ei4Jr92sOBrkeP9VZ4RivjE/dptKD/sc8fwkCi+GkIilsMFUydGvSTIt5ZwIfbUt5gBK3usjKS1dPOV4VrlGM8gPfefIo2Cf9Ke5uaaINbKIv7FKIOQr4MB9wIDAQAB"
+}
